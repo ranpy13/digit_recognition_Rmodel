@@ -16,3 +16,22 @@ image(sample_4, col = grey.colors(255))
 
 sample_7 <- matrix(as.numeric(data[7, -1]), nrow = 28, byrow = TRUE)
 image(sample_7, col = grey.colors(255))
+
+
+# Rotating the matrix by reversing elements in each column
+rotate <- function(x) t(apply(x, 2, rev))
+
+# Look at the rotated images
+image(rotate(sample_4), col = grey.colors(255))
+image(rotate(sample_7), col = grey.colors(255))
+
+# Transform target variables "label" from integer to factor
+# in order to perform classifcations
+is.factor(data$label)
+data$label <- as.factor(data$label)
+
+# Check class blanaced or unbalanced
+summary(data$label)
+
+proportion <- prop.table(table(data$label)) * 100
+cbind(count = table(data$label), proportion = proportion)
