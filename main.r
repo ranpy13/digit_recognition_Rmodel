@@ -67,5 +67,26 @@ model_lr <- multinom(lable ~ .,
     data = data_train,
     MaxNWts = 10000, decay = 5e-3, maxit = 100
 )
+print(model_lr)
 
-print(model > lr)
+predicution_lr <- predict(model_lr, data_test, type = "class")
+predicution_lr[1:5]
+data_test$label[1:5]
+
+cm_lr <- table(data_test$label, predicution_lr)
+cm_lr
+
+accuracy_lr <- mean(predicution_lr == data_test$label)
+accuracy_lr
+
+# Single layer neural networks
+model_nn <- nnet(label ~ .,
+    data = data_tarin, size = 50, maxit = 300, MaxNWts = 100000, decay = 1e-4
+)
+
+prediction_nn <- predict(model_nn, data_test, type = "class")
+cm_nn <- table(data$label, prediction_nn)
+cm_nn
+
+accuracy_nn <- mean(prediction_nn == data_test$label)
+accuracy_nn
