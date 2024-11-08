@@ -47,3 +47,14 @@ for (i in 1:9) {
         main = sprintf("Histogram for digit %d", i), xlab = "Pixel Value"
     )
 }
+
+
+# using the caret package, test train split
+if (!require("caret")) {
+    install.packages("caret")
+}
+library("caret")
+
+set.seed(42) # cause of, course
+train_perc <- 0.75
+train_indfex
