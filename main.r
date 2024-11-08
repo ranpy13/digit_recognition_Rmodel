@@ -67,16 +67,15 @@ model_lr <- multinom(lable ~ .,
     data = data_train,
     MaxNWts = 10000, decay = 5e-3, maxit = 100
 )
-print(model_lr)
+# print(model_lr)
 
-predicution_lr <- predict(model_lr, data_test, type = "class")
-predicution_lr[1:5]
+prediction_lr <- predict(model_lr, data_test, type = "class")
+prediction_lr[1:5]
 data_test$label[1:5]
 
-cm_lr <- table(data_test$label, predicution_lr)
+cm_lr <- table(data_test$label, prediction_lr)
 cm_lr
-
-accuracy_lr <- mean(predicution_lr == data_test$label)
+accuracy_lr <- mean(prediction_lr == data_test$label)
 accuracy_lr
 
 # Single layer neural networks
@@ -87,6 +86,33 @@ model_nn <- nnet(label ~ .,
 prediction_nn <- predict(model_nn, data_test, type = "class")
 cm_nn <- table(data$label, prediction_nn)
 cm_nn
-
 accuracy_nn <- mean(prediction_nn == data_test$label)
 accuracy_nn
+
+
+# Multiple hidden layer Neural Networks
+
+# installing mxnet
+cran <- getOption("repos")
+cran["dmlc"] <- "https://s3-us-west-2.amazonaws.com/apache-mxnet/R/CRAN/"
+options(repos = cran)
+if (!require("mxnet")) {
+    install.packages("mznet")
+}
+
+require(mxnet)
+
+data <- read.csv("train.csv")
+train_prec <- 0.75
+train_index <- createDataPartition(data$label, p = train_perc, list = FALSE)
+data_train <- data[train_index, ]
+data_test <- data[-train_index, ]
+
+data_train <- data.matrix(data_train)
+data_train.x <- data_train[, -1]
+data_train.x <- t(data_train.x / 255)
+data_train.y <- data_train[, -1]
+
+data <- mx.symbol.Variable("data")
+fc1 <- mx.symbol.FullyConnected(data, name = "fc1", num_hidden = 128)
+act1 <- mx.symbol.Activation("relu")
