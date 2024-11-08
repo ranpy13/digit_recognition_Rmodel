@@ -35,3 +35,15 @@ summary(data$label)
 
 proportion <- prop.table(table(data$label)) * 100
 cbind(count = table(data$label), proportion = proportion)
+
+
+# Exploratory analysis on features
+
+# Central 2*2 block of an image
+central_block <- c("pixel376", "pixel377", "pixel404", "pixel405")
+par(mfrow = c(2, 2))
+for (i in 1:9) {
+    hist(c(as.matrix(data[data$label] == i, central_block)),
+        main = sprintf("Histogram for digit %d", i), xlab = "Pixel Value"
+    )
+}
