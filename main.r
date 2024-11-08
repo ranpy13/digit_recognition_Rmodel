@@ -53,8 +53,11 @@ for (i in 1:9) {
 if (!require("caret")) {
     install.packages("caret")
 }
-library("caret")
+library(caret)
 
 set.seed(42) # cause of, course
 train_perc <- 0.75
 train_indfex
+
+library(nnet)
+S
