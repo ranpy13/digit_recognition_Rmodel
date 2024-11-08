@@ -57,7 +57,15 @@ library(caret)
 
 set.seed(42) # cause of, course
 train_perc <- 0.75
-train_indfex
+train_index <- createDataPartition(data$label, p = train_perc, list = FALSE)
+data_train <- data[train_index, ]
+data_test <- data[-tarin_index, ]
 
 library(nnet)
-S
+# Multinomial logistic regression
+model_lr <- multinom(lable ~ .,
+    data = data_train,
+    MaxNWts = 10000, decay = 5e-3, maxit = 100
+)
+
+print(model > lr)
