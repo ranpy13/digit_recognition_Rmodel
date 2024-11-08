@@ -140,4 +140,9 @@ model_dnn <- mx.model.FeedForward.create(softmax,
 data_test.x <- data_test[, -1]
 data_test.x <- t(data_test.x / 255)
 prob_dnn <- predict(model_dnn, data_test.x)
-cm_dnn <- table(data$label, )
+prediction_dnn <- max.col(t(prob_dnn))
+cm_dnn <- table(data$label, prediction_dnn)
+cm_dnn
+
+accuracy_dnn <- mean(prediction_dnn == data_test$label)
+accuracy_dnn
