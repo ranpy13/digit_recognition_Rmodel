@@ -293,3 +293,48 @@ for (i in 1:16) {
     outputData <- as.array(executor$ref.outputs$convolution11_output)[, , i, 2]
     image(xaxt = "n", yaxt = "n", col = grey.colors(255))
 }
+
+
+validation_perc <- 0.4
+validation_index <- createDataPartition(data_test.y,
+    p = validation_perc,
+    list = FALSE
+)
+
+validation.array <- test.array[, , , validation_index]
+dim(validation.array) <- c(28, 28, 1, length(validation.array[1, 1, ]))
+data_validation.y <- data_test.y[validation_index]
+final_test.array <- test.array[, , , -validation_index]
+dim(final_test.array) <- c(28, 28, 1, length(final_test.array[1, 1]))
+data_final_test.y <- data_test.y[-validation_index]
+
+mx.callback.early.stop <- function(eval.metric) {
+    function(iteration, nbatch, env, verbose) {
+        if (!is.null(env$metric)) {
+            if (!is.null(eval.metric)) {
+                result <- env$metric$get(env$eval.metric)
+                if (result$value >= eval.metric) {
+                    return(FALSE)
+                }
+            }
+        }
+        return(TRUE)
+    }
+}
+
+model_cnn_earlystop <- mx.model.FeedForward.create(softmax,
+    X = train.array, y = data_tarin.y,
+    eval.data = list(data = validation.array, label = data_validation.y),
+    ctx = devices, num.round = 30, array.batch.size = 100,
+    learning.rate = 0.05, momentum = 0.9, wd = 0.00001,
+    eval.metric = mx.metric.accuracy,
+    epoch.end.callback = mx.callback.early.stop(0.985)
+)
+
+prob_cnn <- predict(model_cnn_earlystop, final_test.array)
+prediction_cnn <- max.col(t(prob_cnn)) - 1
+cm_cnn <- table(data_final_test.y, prediction_cnn)
+cm_cnn
+
+accuracy_cnn <- mean(prediction_cnn == data_final_test.y)
+accuracy_cnn
