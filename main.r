@@ -132,7 +132,7 @@ model_dnn <- mx.model.FeedForward.create(softmax,
     array.batch.size = 100,
     learning.rate = 0.01,
     momentum = 0.9,
-    eval.metric = mx.metrix.accuracy,
+    eval.metric = mx.metric.accuracy,
     initializer = mx.init.uniform(0.1),
     epoch.end.callback = mx.callback.log.train.metric(100)
 )
@@ -146,3 +146,46 @@ cm_dnn
 
 accuracy_dnn <- mean(prediction_dnn == data_test$label)
 accuracy_dnn
+
+
+# Convolution Neural Networks
+
+# first convolution
+conv1 <- mx.symbol.Convolution(data = data, kernel = c(5, 5), num_filter = 20)
+act1 <- mx.symbol.Activation(data = conv1, act_type = "relu")
+pool1 <- mx.symbol.Pooling(
+    data = act1, pool_type = "max",
+    kernel = c(2, 2), stride = c(2, 2)
+)
+
+# second convolution
+conv2 <- mx.symbol.Convolution(data = pool1, kernel = c(5, 5), num_filter = 20)
+act2 <- mx.symbol.Activation(data = conv1, act_type = "relu")
+pool2 <- mx.symbol.Pooling(
+    data = act2, pool_type = "max",
+    kernel = c(2, 2), stride = c(2, 2)
+)
+
+
+# first fully connected layer
+flatten <- mx.symbol.Flatten(data = pool2)
+fc1 <- mx.symbol.FullyConnected(data = faltten, num_hidden = 500)
+act3 <- mx.symbol.Activation(data = fc1, act_type = "relu")
+
+# second fully connected layer
+fc2 <- mx.symbol.FullyConnected(data = act3, num_hidden = 10)
+
+# softmax output
+softmax <- mx.symbol.SoftmaxOuput(data = fc2, name = "sm")
+
+mx.set.seed(42)
+train.array <- data_tarin.x
+dim(train.array) <- c(28, 28, 1, ncol(data_train.x))
+
+model_cnn <- mx.model.FeedForward.create(softmax,
+    X = train.array,
+    y = data_train.y, ctx = devices, num.round = 30,
+    momentum = 0.9, wd = 0.00001, learning.rate = 0.05,
+    eval.metric = mx.metric.accuracy,
+    epoch.end.callback = mx.callback.log.train.metric(100)
+)
