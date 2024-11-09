@@ -231,13 +231,28 @@ legend(20, 0.5, c("training", "testing"),
 
 # Visualize Convolution Layers
 par(mfrow = c(1, 2))
-test_1 <- matrix(as.numeric(data_test[1, -1]), nrow = 28 byrow = TRUE)
+test_1 <- matrix(as.numeric(data_test[1, -1]), nrow = 28, byrow = TRUE)
 image(rotate(test_1), col = grey.colors(255))
 test_2 <- matrix(as.numeric(data_test[2, -1]), nrow = 28, byrow = TRUE)
 image(rotate(test_2), col = grey.colors(255))
 
 
-layerss_for_viz <- mx.symbol.Group(c(conv1, act1, pool1, conv2, act2, pool2, fc1, fc2))
-executor <- mx.simple.bind(symbol = layerss_for_viz, data = dim(test.array), ctx = mx.cpu())
+layerss_for_viz <- mx.symbol.Group(c(
+    conv1, act1, pool1,
+    conv2, act2, pool2, fc1, fc2
+))
+executor <- mx.simple.bind(
+    symbol = layerss_for_viz,
+    data = dim(test.array), ctx = mx.cpu()
+)
 
-mx.exec.update.arg
+mx.exec.update.arg.arrays(executor, model_cnn$arg.params, match.name = TRUE)
+mx.exec.update.aux.arrays(executor, model_cnn$aux.params, match.name = TRUE)
+
+mx.exec.update.arg.arrays(executor, list(data = mx.nd.array(test.array)),
+    match.name = TRUE
+)
+mx.exec.forward(executor, is.train = FALSE)
+
+
+names(executor$ref.outputs)
