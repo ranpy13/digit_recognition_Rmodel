@@ -123,7 +123,7 @@ For `mxnet`, follow the installation instructions on the [MXNet R package page](
 
    ```bash
    git clone https://github.com/ranpy13/digit_recognition_Rmodel.git
-   cd handwritten-digit-recognition
+   cd digit_recognition_Rmodel
    ```
 
 2. Load the dataset and run the R script:
