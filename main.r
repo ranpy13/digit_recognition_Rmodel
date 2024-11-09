@@ -259,12 +259,37 @@ names(executor$ref.outputs)
 
 # Plot the activation of the testing sample
 par(mfrow = c(4, 4), mar = c(0.1, 0.1, 0.1, 0.1))
-for ( i in 1:16) {
+for (i in 1:16) {
     outputData <- as.array(executor$ref.outputs$activation15_output)[, , i, 1]
-    image(outputData, xaxt = 'n', yaxt = 'n', col = grey.colors(255))
+    image(outputData, xaxt = "n", yaxt = "n", col = grey.colors(255))
 }
 
 par(mfrow = c(4, 4), mar = c(0.1, 0.1, 0.1, 0.1))
 for (i in 1:16) {
-    outputData <- xaxt = 'n', yaxt = 'n', col = grey.colors(255)
+    outputData <- as.array(executor$ref.outputs$activation15_output)[, , i, 2]
+    image(outputData, xaxt = "n", yaxt = "n", col = grey.colors(255))
+}
+
+par(mfrow = c(4, 4), mar = c(0.1, 0.1, 0.1, 0.1))
+for (i in 1:16) {
+    outputData <- as.array(executor$ref.outputs$pooling10_output)[, , i, 1]
+    image(xaxt = "n", yaxt = "n", col = grey.colors(255))
+}
+
+par(mfrow = c(4, 4), mar = c(0.1, 0.1, 0.1, 0.1))
+for (i in 1:16) {
+    outputData <- as.array(executor$ref.outputs$pooling10_output)[, , i, 2]
+    image(xaxt = "n", yaxt = "n", col = grey.colors(255))
+}
+
+par(mfrow = c(4, 4), mar = c(0.1, 0.1, 0.1, 0.1))
+for (i in 1:16) {
+    outputData <- as.array(executor$ref.outputs$convolution11_output)[, , i, 1]
+    image(xaxt = "n", yaxt = "n", col = grey.colors(255))
+}
+
+par(mfrow = c(4, 4), mar = c(0.1, 0.1, 0.1, 0.1))
+for (i in 1:16) {
+    outputData <- as.array(executor$ref.outputs$convolution11_output)[, , i, 2]
+    image(xaxt = "n", yaxt = "n", col = grey.colors(255))
 }
