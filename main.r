@@ -189,3 +189,41 @@ model_cnn <- mx.model.FeedForward.create(softmax,
     eval.metric = mx.metric.accuracy,
     epoch.end.callback = mx.callback.log.train.metric(100)
 )
+
+
+# testing the network
+test.array <- data_test.x
+dim(test.array) <- c(28, 28, 1, ncol(data_test.x))
+prob_cnn <- predict(model_cnn, test.array)
+prediction_cnn <- max.col(t(prob_cnn))
+cm_cnn <- table(data_test$label, prediction_cnn)
+cm_cnn
+
+accuracy_cnn <- mean(prediction_cnn == data_test$label)
+accuracy_cnn
+
+
+# Visualize the Model
+graph.viz(model_cnn$symbol)
+
+# Plot learning curve
+data_test.y <- data_test[, 1]
+logger <- mx.metric.logger$new()
+model_cnn <- mx.model.FeedForward.create(softmax,
+    X = train.array,
+    y = data_train.y, eval.data = list(data = test.array, label = data_test.y),
+    ctx = devices, num_rounds = 30, array.batch.size = 100,
+    momentum = 0.9, wd = 0.00001, learning.rate = 0.05,
+    eval.metric = mx.metric.accuracy,
+    epoch.end.callback = mx.callback.log.train.metric(1, logger)
+)
+
+plot(logger$train, type = "1", col = "red", ann = FALSE)
+lines(logger$eval, type = "1", col = "blue")
+title(main = "Learning Curve")
+title(xlab = "Iterations")
+title(ylab = "Accuracy")
+legend(20, 0.5, c("training", "testing"),
+    cex = 0.8,
+    col = c("red", "blue"), pch = 21:22, lty = 1:2
+)
