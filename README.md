@@ -122,7 +122,7 @@ For `mxnet`, follow the installation instructions on the [MXNet R package page](
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/ranpy13/handwritten-digit-recognition.git
+   git clone https://github.com/ranpy13/digit_recognition_Rmodel.git
    cd handwritten-digit-recognition
    ```
 
